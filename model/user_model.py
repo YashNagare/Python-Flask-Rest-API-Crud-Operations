@@ -17,24 +17,25 @@ class user_model:
         self.cur.execute("SELECT * FROM users")
         result = self.cur.fetchall()
         if len(result) > 0:
-            return json.dumps(result)
+            # return json.dumps(result)
+            return {"payload" : result}
         else:
-            return "No data found"
+            return {"message" : "No data found"}
 
     def user_addone_model(self, data):
         self.cur.execute(f"INSERT INTO users(name, email, phone, role, password) VALUES('{data['name']}', '{data['email']}', '{data['phone']}', '{data['role']}', '{data['password']}')")
-        return "User created successfully"
+        return {"message" : "User created successfully"}
 
     def user_update_model(self, data):
         self.cur.execute(f"UPDATE users SET name='{data['name']}', email='{data['email']}', phone='{data['phone']}', role='{data['role']}', password='{data['password']}' WHERE id='{data['id']}'")
         if self.cur.rowcount > 0:
-            return "User updated successfully"
+            return {"message" : "User updated successfully"}
         else:
-            return "Nothing to update"
+            return {"message" : "Nothing to update"}
 
     def user_delete_model(self, id):
         self.cur.execute(f"DELETE FROM users WHERE id={id}")
         if self.cur.rowcount > 0:
-            return "User deleted successfully"
+            return {"message" : "User deleted successfully"}
         else:
-            return "Nothing to delete"
+            return {"message" : "Nothing to delete"}
