@@ -1,5 +1,6 @@
 import mysql.connector
 import json
+from flask import make_response
 
 class user_model:
 
@@ -18,24 +19,24 @@ class user_model:
         result = self.cur.fetchall()
         if len(result) > 0:
             # return json.dumps(result)
-            return {"payload" : result}
+            return make_response({"payload" : result}, 200)
         else:
-            return {"message" : "No data found"}
+            return make_response({"message" : "No data found"}, 204)
 
     def user_addone_model(self, data):
         self.cur.execute(f"INSERT INTO users(name, email, phone, role, password) VALUES('{data['name']}', '{data['email']}', '{data['phone']}', '{data['role']}', '{data['password']}')")
-        return {"message" : "User created successfully"}
+        return make_response({"message" : "User created successfully"}, 201)
 
     def user_update_model(self, data):
         self.cur.execute(f"UPDATE users SET name='{data['name']}', email='{data['email']}', phone='{data['phone']}', role='{data['role']}', password='{data['password']}' WHERE id='{data['id']}'")
         if self.cur.rowcount > 0:
-            return {"message" : "User updated successfully"}
+            return make_response({"message" : "User updated successfully"}, 201)
         else:
-            return {"message" : "Nothing to update"}
+            return make_response({"message" : "Nothing to update"}, 202)
 
     def user_delete_model(self, id):
         self.cur.execute(f"DELETE FROM users WHERE id={id}")
         if self.cur.rowcount > 0:
-            return {"message" : "User deleted successfully"}
+            return make_response({"message" : "User deleted successfully"}, 200)
         else:
-            return {"message" : "Nothing to delete"}
+            return make_response({"message" : "Nothing to delete"}, 202)
