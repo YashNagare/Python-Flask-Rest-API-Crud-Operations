@@ -55,3 +55,16 @@ class user_model:
             return make_response({"message" : "User updated successfully"}, 201)
         else:
             return make_response({"message" : "Nothing to update"}, 202)
+
+    def user_pagination_model(self, limit, page):
+        limit = int(limit)
+        page = int(page)
+        start = (page * limit) - limit
+        qry = f"SELECT * from users LIMIT {start}, {limit}"
+        self.cur.execute(qry)
+        result = self.cur.fetchall()
+        if len(result) > 0:
+            res = make_response({"payload" : result, "limit" : limit, "page" : page}, 200)
+            return res
+        else:
+            return make_response({"message" : "No data found"}, 204)
