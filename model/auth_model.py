@@ -4,22 +4,25 @@ import json
 from flask import make_response, request
 import jwt
 import re
+from config.config import dbconfig
 
 class auth_model:
 
     def __init__(self):
         try:
-            self.con = mysql.connector.connect(host="localhost", user="root", password="root", database="flask_tutorial")
+            self.con = mysql.connector.connect(host=dbconfig["hostname"], user=dbconfig["username"], password=dbconfig["password"], database=dbconfig["database"])
             self.con.autocommit = True
             self.cur = self.con.cursor(dictionary=True)
             print("Connection successful")
         except:
             print("Some error")
 
-    def token_auth(self, endpoint):
+    def token_auth(self, endpoint=""):
         def inner1(func):
             @wraps(func)
             def inner2(*args):
+                endpoint = request.url_rule
+                print(endpoint)
                 authorization = request.headers.get("Authorization")
                 if re.match("Bearer *([^ ]+) *$", authorization, flags=0):
                     token = authorization.split(" ")[1]
