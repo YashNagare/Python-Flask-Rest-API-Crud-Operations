@@ -29,11 +29,19 @@ class user_model:
             return make_response({"message" : "No data found"}, 204)
 
     def user_addone_model(self, data):
-        self.cur.execute(f"INSERT INTO users(name, email, phone, role, password) VALUES('{data['name']}', '{data['email']}', '{data['phone']}', '{data['role']}', '{data['password']}')")
+        self.cur.execute(f"INSERT INTO users(name, email, phone, role_id, password) VALUES('{data['name']}', '{data['email']}', '{data['phone']}', '{data['role_id']}', '{data['password']}')")
         return make_response({"message" : "User created successfully"}, 201)
+    
+    def user_addmultiple_model(self, data):
+        qry = "INSERT INTO users(name, email, phone, role_id, password) VALUES "
+        for userdata in data:
+            qry += f"('{userdata['name']}', '{userdata['email']}', '{userdata['phone']}', {userdata['role_id']},'{userdata['password']}'),"
+        finalqry = qry.rstrip(",")
+        self.cur.execute(finalqry)
+        return make_response({"message":"CREATED_SUCCESSFULLY"},201)
 
     def user_update_model(self, data):
-        self.cur.execute(f"UPDATE users SET name='{data['name']}', email='{data['email']}', phone='{data['phone']}', role='{data['role']}', password='{data['password']}' WHERE id='{data['id']}'")
+        self.cur.execute(f"UPDATE users SET name='{data['name']}', email='{data['email']}', phone='{data['phone']}', role_id='{data['role_id']}', password='{data['password']}' WHERE id='{data['id']}'")
         if self.cur.rowcount > 0:
             return make_response({"message" : "User updated successfully"}, 201)
         else:
